@@ -7,7 +7,7 @@ Summary:	Smart Common Input Method
 Name:		scim
 Version:	1.4.4
 Release:	1
-License:	GPL
+License:	LGPL
 Group:		Applications
 Source0:	http://dl.sourceforge.net/scim/scim-1.4.4.tar.gz
 # Source0-md5:	6805403b2151e89f17f5686e7ebcd515
