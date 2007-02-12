@@ -1,5 +1,5 @@
 Summary:	Smart Common Input Method
-Summary(pl):	Smart Common Input Method - ogólna metoda wprowadzania
+Summary(pl.UTF-8):   Smart Common Input Method - ogÃ³lna metoda wprowadzania
 Name:		scim
 Version:	1.4.4
 Release:	1
@@ -25,10 +25,10 @@ scim is the core package of the SCIM project, which provides the
 fundamental routines and data types. A gtk+2 based Panel (User
 Interface) and setup dialog are also shipped within this package.
 
-%description -l pl
-scim to g³ówny pakiet projektu SCIM, udostêpniaj±cy podstawowe funkcje
-i typy danych. W pakiecie za³±czony jest tak¿e oparty na GTK+ 2 panel
-(interfejs u¿ytkownika) i konfiguracyjne okno dialogowe.
+%description -l pl.UTF-8
+scim to gÅ‚Ã³wny pakiet projektu SCIM, udostÄ™pniajÄ…cy podstawowe funkcje
+i typy danych. W pakiecie zaÅ‚Ä…czony jest takÅ¼e oparty na GTK+ 2 panel
+(interfejs uÅ¼ytkownika) i konfiguracyjne okno dialogowe.
 
 %prep
 %setup -q
