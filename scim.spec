@@ -1,5 +1,5 @@
 Summary:	Smart Common Input Method
-Summary(pl.UTF-8):   Smart Common Input Method - ogólna metoda wprowadzania
+Summary(pl.UTF-8):	Smart Common Input Method - ogólna metoda wprowadzania
 Name:		scim
 Version:	1.4.4
 Release:	1
