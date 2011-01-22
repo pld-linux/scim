@@ -5,16 +5,17 @@ Version:	1.4.9
 Release:	1
 License:	LGPL v2+
 Group:		X11/Applications
-Source0:	http://dl.sourceforge.net/scim/%{name}-%{version}.tar.gz
+Source0:	http://downloads.sourceforge.net/scim/%{name}-%{version}.tar.gz
 # Source0-md5:	975ba34b01304ea8166ac8ea27aa9e88
-Patch0:		scim-1.4.7-syslibltdl.patch
-Patch1:		scim-1.4.8-fix-dlopen.patch
+Patch0:		%{name}-1.4.7-syslibltdl.patch
+Patch1:		%{name}-1.4.8-fix-dlopen.patch
 URL:		http://www.scim-im.org/
 BuildRequires:	autoconf >= 2.59-9
 BuildRequires:	automake
 BuildRequires:	gettext-devel
 BuildRequires:	gtk+2-devel >= 2:2.4.0
 BuildRequires:	intltool >= 0.33
+BuildRequires:	libltdl-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool
 BuildRequires:	pango-devel >= 1.1.0
@@ -62,6 +63,10 @@ Statyczne biblioteki SCIM.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+
+# evil empty file, source fails to find real ltdl.h because of this
+! test -s src/ltdl.h
+%{__rm} src/ltdl.h
 
 for f in m4/intltool.m4 $(grep -l gettext- m4/*.m4 | xargs); do
 	:> $f
