@@ -1,12 +1,14 @@
 Summary:	Smart Common Input Method
 Summary(pl.UTF-8):	Smart Common Input Method - ogólna metoda wprowadzania
 Name:		scim
-Version:	1.4.7
+Version:	1.4.9
 Release:	1
 License:	LGPL v2+
 Group:		X11/Applications
 Source0:	http://dl.sourceforge.net/scim/%{name}-%{version}.tar.gz
-# Source0-md5:	840dcfd4264a1443478c188ff747984e
+# Source0-md5:	975ba34b01304ea8166ac8ea27aa9e88
+Patch0:		scim-1.4.7-syslibltdl.patch
+Patch1:		scim-1.4.8-fix-dlopen.patch
 URL:		http://www.scim-im.org/
 BuildRequires:	autoconf >= 2.59-9
 BuildRequires:	automake
@@ -58,18 +60,23 @@ Statyczne biblioteki SCIM.
 
 %prep
 %setup -q
+%patch0 -p1
+%patch1 -p1
 
-# outdated, use system version
-:>m4/intltool.m4
+for f in m4/intltool.m4 $(grep -l gettext- m4/*.m4 | xargs); do
+	:> $f
+done
 
 %build
-%{__intltoolize}
 %{__gettextize}
+%{__intltoolize}
 %{__libtoolize}
 %{__aclocal} -I m4
 %{__autoconf}
 %configure \
-	--with-gtk-im-module-dir=%{immodulesdir}
+	--enable-ld-version-script \
+	--with-gtk-im-module-dir=%{immodulesdir} \
+	--disable-ltdl-install
 %{__make}
 
 %install
