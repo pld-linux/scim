@@ -2,7 +2,7 @@ Summary:	Smart Common Input Method
 Summary(pl.UTF-8):	Smart Common Input Method - ogólna metoda wprowadzania
 Name:		scim
 Version:	1.4.10
-Release:	1
+Release:	2
 License:	LGPL v2+
 Group:		X11/Applications
 Source0:	http://downloads.sourceforge.net/scim/%{name}_%{version}.tar.gz
@@ -41,7 +41,6 @@ i typy danych. W pakiecie załączony jest także oparty na GTK+ 2 panel
 Summary:	Smart Common Input Method libraries
 Summary(pl.UTF-8):	Biblioteki Smart Common Input Method
 Group:		X11/Libraries
-Requires:	%{name} = %{version}-%{release}
 
 %description libs
 Smart Common Input Method libraries.
