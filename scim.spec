@@ -8,6 +8,8 @@ Group:		X11/Applications
 Source0:	http://downloads.sourceforge.net/scim/%{name}_%{version}.tar.gz
 # Source0-md5:	74a768e30c3b521e6c133be6359a868c
 Source1:	%{name}.xinputd
+Patch0:		%{name}-gtk2-immodule-dir.patch
+Patch1:		%{name}-config.patch
 URL:		http://www.scim-im.org/
 BuildRequires:	autoconf >= 2.59-9
 BuildRequires:	automake
@@ -20,6 +22,9 @@ BuildRequires:	libtool
 BuildRequires:	pango-devel >= 1.1.0
 BuildRequires:	pkgconfig
 BuildRequires:	xorg-lib-libX11-devel
+Requires:	%{name}-libs = %{version}-%{release}
+Requires:	im-chooser
+Requires:	imsettings
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -32,11 +37,23 @@ scim to główny pakiet projektu SCIM, udostępniający podstawowe funkcje
 i typy danych. W pakiecie załączony jest także oparty na GTK+ 2 panel
 (interfejs użytkownika) i konfiguracyjne okno dialogowe.
 
+%package libs
+Summary:	Smart Common Input Method libraries
+Summary(pl.UTF-8):	Biblioteki Smart Common Input Method
+Group:		X11/Libraries
+Requires:	%{name} = %{version}-%{release}
+
+%description libs
+Smart Common Input Method libraries.
+
+%description libs -l pl.UTF-8
+Biblioteki Smart Common Input Method.
+
 %package devel
 Summary:	Header files for SCIM libraries
 Summary(pl.UTF-8):	Pliki nagłówkowe bibliotek SCIM
 Group:		X11/Development/Libraries
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}-libs = %{version}-%{release}
 
 %description devel
 Header files for SCIM libraries.
@@ -56,15 +73,28 @@ Static SCIM libraries.
 %description static -l pl.UTF-8
 Statyczne biblioteki SCIM.
 
+%package gtk2
+Summary:	Smart Common Input Method Gtk IM module
+Group:		X11/Libraries
+Requires:	%{name} = %{version}-%{release}
+Requires:	gtk+2
+Requires(post):	gtk+2
+Requires(postun):	gtk+2
+
+%description gtk2
+This package provides a GTK input method module for SCIM.
+
 %prep
 %setup -q
+%patch0 -p1
+%patch1 -p1
 
 %build
-%{__gettextize}
-%{__intltoolize}
 %{__libtoolize}
 %{__aclocal} -I m4
+%{__autoheader}
 %{__autoconf}
+%{__automake}
 %configure \
 	--enable-ld-version-script
 
@@ -72,61 +102,86 @@ Statyczne biblioteki SCIM.
 
 %install
 rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinput.d
 
 %{__make} install \
-	DESTDIR=$RPM_BUILD_ROOT \
-	gnomeccdir=%{_datadir}/gnome/capplets
+	DESTDIR=$RPM_BUILD_ROOT
 
-rm -f $RPM_BUILD_ROOT%{_libdir}/scim-1.0/*/*/*.{la,a}
-rm -f $RPM_BUILD_ROOT%{_libdir}/gtk-2.0/*/immodules/im-scim.{la,a}
+%{__sed} -e 's|@@LIB@@|%{_lib}|g' %{SOURCE1} >$RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinput.d/scim.conf
+
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/*.la
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/scim-1.0/*/*/*.{la,a}
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/gtk-2.0/*/immodules/im-scim.{la,a}
 
 %find_lang %{name}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post	-p /sbin/ldconfig
-%postun	-p /sbin/ldconfig
+%post	libs -p /sbin/ldconfig
+%postun	libs -p /sbin/ldconfig
+
+%post gtk2
+%if "%{_lib}" != "lib"
+%{_bindir}/gtk-query-immodules-2.0-64 > %{_sysconfdir}/gtk64-2.0/gtk.immodules
+%else
+%{_bindir}/gtk-query-immodules-2.0 > %{_sysconfdir}/gtk-2.0/gtk.immodules
+%endif
+
+%postun gtk2
+%if "%{_lib}" != "lib"
+%{_bindir}/gtk-query-immodules-2.0-64 > %{_sysconfdir}/gtk64-2.0/gtk.immodules
+%else
+%{_bindir}/gtk-query-immodules-2.0 > %{_sysconfdir}/gtk-2.0/gtk.immodules
+%endif
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog README THANKS TODO
+%dir %{_sysconfdir}/scim
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/scim/config
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/scim/global
+%{_sysconfdir}/X11/xinit/xinput.d/scim.conf
 %attr(755,root,root) %{_bindir}/scim
 %attr(755,root,root) %{_bindir}/scim-config-agent
 %attr(755,root,root) %{_bindir}/scim-setup
-%attr(755,root,root) %{_libdir}/libscim-1.0.so.*.*.*
-%attr(755,root,root) %{_libdir}/libscim-gtkutils-1.0.so.*.*.*
-%attr(755,root,root) %{_libdir}/libscim-x11utils-1.0.so.*.*.*
-%dir %{_libdir}/scim-1.0
-%dir %{_libdir}/scim-1.0/*
-%dir %{_libdir}/scim-1.0/*/Config
 %dir %{_libdir}/scim-1.0/*/Filter
 %dir %{_libdir}/scim-1.0/*/FrontEnd
 %dir %{_libdir}/scim-1.0/*/Helper
-%dir %{_libdir}/scim-1.0/*/IMEngine
 %dir %{_libdir}/scim-1.0/*/SetupUI
-%attr(755,root,root) %{_libdir}/scim-1.0/*/*/*.so
+%attr(755,root,root) %{_libdir}/scim-1.0/*/Filter/*.so
+%attr(755,root,root) %{_libdir}/scim-1.0/*/FrontEnd/*.so
+%attr(755,root,root) %{_libdir}/scim-1.0/*/Helper/*.so
+%attr(755,root,root) %{_libdir}/scim-1.0/*/SetupUI/*.so
 %attr(755,root,root) %{_libdir}/scim-1.0/scim-helper-launcher
 %attr(755,root,root) %{_libdir}/scim-1.0/scim-helper-manager
 %attr(755,root,root) %{_libdir}/scim-1.0/scim-launcher
 %attr(755,root,root) %{_libdir}/scim-1.0/scim-panel-gtk
-%attr(755,root,root) %{_libdir}/gtk-2.0/*/immodules/im-scim.so
-%dir %{_sysconfdir}/scim
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/scim/config
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/scim/global
 %{_datadir}/scim
 #%{_datadir}/gnome/capplets/scim-setup.desktop
 %{_desktopdir}/scim-setup.desktop
 %{_pixmapsdir}/scim-setup.png
+
+%files libs
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libscim-1.0.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libscim-1.0.so.[0-9]
+%attr(755,root,root) %{_libdir}/libscim-gtkutils-1.0.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libscim-gtkutils-1.0.so.[0-9]
+%attr(755,root,root) %{_libdir}/libscim-x11utils-1.0.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libscim-x11utils-1.0.so.[0-9]
+%dir %{_libdir}/scim-1.0
+%dir %{_libdir}/scim-1.0/*
+%dir %{_libdir}/scim-1.0/*/Config
+%dir %{_libdir}/scim-1.0/*/IMEngine
+%attr(755,root,root) %{_libdir}/scim-1.0/*/Config/*.so
+%attr(755,root,root) %{_libdir}/scim-1.0/*/IMEngine/*.so
 
 %files devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libscim-1.0.so
 %attr(755,root,root) %{_libdir}/libscim-gtkutils-1.0.so
 %attr(755,root,root) %{_libdir}/libscim-x11utils-1.0.so
-%{_libdir}/libscim-1.0.la
-%{_libdir}/libscim-gtkutils-1.0.la
-%{_libdir}/libscim-x11utils-1.0.la
 %dir %{_includedir}/scim-1.0
 %{_includedir}/scim-1.0/scim*.h
 %{_includedir}/scim-1.0/gtk
@@ -140,3 +195,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libscim-1.0.a
 %{_libdir}/libscim-gtkutils-1.0.a
 %{_libdir}/libscim-x11utils-1.0.a
+
+%files gtk2
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/gtk-2.0/*/immodules/im-scim.so
