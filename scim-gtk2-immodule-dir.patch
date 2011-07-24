@@ -1,0 +1,11 @@
+--- scim-1.4.10/configure.ac~	2010-07-26 09:46:30.000000000 +0200
++++ scim-1.4.10/configure.ac	2011-07-24 20:20:48.233891514 +0200
+@@ -237,7 +237,7 @@
+   if test -z "$GTK_LIBDIR)"; then
+     GTK_LIBDIR="$libdir"
+   fi
+-  GTK_IM_MODULEDIR=$GTK_LIBDIR/gtk-2.0/immodules
++  GTK_IM_MODULEDIR=$GTK_LIBDIR/gtk-2.0/$GTK_BINARY_VERSION/immodules
+   AC_SUBST(GTK_LIBDIR)
+   AC_SUBST(GTK_IM_MODULEDIR)
+   AC_SUBST(GTK_VERSION)
