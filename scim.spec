@@ -7,6 +7,7 @@ License:	LGPL v2+
 Group:		X11/Applications
 Source0:	http://downloads.sourceforge.net/scim/%{name}_%{version}.tar.gz
 # Source0-md5:	74a768e30c3b521e6c133be6359a868c
+Source1:	%{name}.xinputd
 URL:		http://www.scim-im.org/
 BuildRequires:	autoconf >= 2.59-9
 BuildRequires:	automake
@@ -20,8 +21,6 @@ BuildRequires:	pango-devel >= 1.1.0
 BuildRequires:	pkgconfig
 BuildRequires:	xorg-lib-libX11-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-
-%define		immodulesdir	%{_libdir}/gtk-2.0/%(pkg-config --variable=gtk_binary_version gtk+-2.0)/immodules
 
 %description
 scim is the core package of the SCIM project, which provides the
@@ -79,7 +78,7 @@ rm -rf $RPM_BUILD_ROOT
 	gnomeccdir=%{_datadir}/gnome/capplets
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/scim-1.0/*/*/*.{la,a}
-rm -f $RPM_BUILD_ROOT%{immodulesdir}/im-scim.{la,a}
+rm -f $RPM_BUILD_ROOT%{_libdir}/gtk-2.0/*/immodules/im-scim.{la,a}
 
 %find_lang %{name}
 
@@ -111,7 +110,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/scim-1.0/scim-helper-manager
 %attr(755,root,root) %{_libdir}/scim-1.0/scim-launcher
 %attr(755,root,root) %{_libdir}/scim-1.0/scim-panel-gtk
-%attr(755,root,root) %{immodulesdir}/im-scim.so
+%attr(755,root,root) %{_libdir}/gtk-2.0/*/immodules/im-scim.so
 %dir %{_sysconfdir}/scim
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/scim/config
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/scim/global
