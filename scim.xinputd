@@ -21,9 +21,9 @@ else
 	GTK_IM_MODULE=xim
 fi
 
-if /usr/@@LIB@@/qt4/plugins/inputmethods/im-scim-bridge.so; then
+if [ -x /usr/@@LIB@@/qt4/plugins/inputmethods/im-scim-bridge.so ]; then
 	QT_IM_MODULE=scim-bridge
-elif /usr/@@LIB@@/qt4/plugins/inputmethods/libqscim.so; then
+elif [ -x /usr/@@LIB@@/qt4/plugins/inputmethods/libqscim.so ]; then
 	QT_IM_MODULE=scim
 else
 	QT_IM_MODULE=xim
