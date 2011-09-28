@@ -2,7 +2,7 @@ Summary:	Smart Common Input Method
 Summary(pl.UTF-8):	Smart Common Input Method - ogólna metoda wprowadzania
 Name:		scim
 Version:	1.4.10
-Release:	3
+Release:	4
 License:	LGPL v2+
 Group:		X11/Applications
 Source0:	http://downloads.sourceforge.net/scim/%{name}_%{version}.tar.gz
@@ -170,7 +170,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libscim-x11utils-1.0.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libscim-x11utils-1.0.so.[0-9]
 %dir %{_libdir}/scim-1.0
-%dir %{_libdir}/scim-1.0/*
+%dir %{_libdir}/scim-1.0/1.4.0
 %dir %{_libdir}/scim-1.0/*/Config
 %dir %{_libdir}/scim-1.0/*/IMEngine
 %attr(755,root,root) %{_libdir}/scim-1.0/*/Config/*.so
