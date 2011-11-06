@@ -1,12 +1,12 @@
 Summary:	Smart Common Input Method
 Summary(pl.UTF-8):	Smart Common Input Method - ogólna metoda wprowadzania
 Name:		scim
-Version:	1.4.10
-Release:	4
+Version:	1.4.11
+Release:	1
 License:	LGPL v2+
 Group:		X11/Applications
-Source0:	http://downloads.sourceforge.net/scim/%{name}_%{version}.tar.gz
-# Source0-md5:	74a768e30c3b521e6c133be6359a868c
+Source0:	http://downloads.sourceforge.net/scim/%{name}-%{version}.tar.gz
+# Source0-md5:	b75ee549d32f21ce9c97e1eaef69b79e
 Source1:	%{name}.xinputd
 Patch0:		%{name}-gtk2-immodule-dir.patch
 Patch1:		%{name}-config.patch
@@ -18,7 +18,7 @@ BuildRequires:	gtk+2-devel >= 2:2.4.0
 BuildRequires:	intltool >= 0.33
 BuildRequires:	libltdl-devel
 BuildRequires:	libstdc++-devel
-BuildRequires:	libtool
+BuildRequires:	libtool >= 2:2.0
 BuildRequires:	pango-devel >= 1.1.0
 BuildRequires:	pkgconfig
 BuildRequires:	xorg-lib-libX11-devel
@@ -41,6 +41,8 @@ i typy danych. W pakiecie załączony jest także oparty na GTK+ 2 panel
 Summary:	Smart Common Input Method libraries
 Summary(pl.UTF-8):	Biblioteki Smart Common Input Method
 Group:		X11/Libraries
+Requires:	gtk+2 >= 2:2.4.0
+Requires:	pango >= 1.1.0
 
 %description libs
 Smart Common Input Method libraries.
@@ -73,15 +75,19 @@ Static SCIM libraries.
 Statyczne biblioteki SCIM.
 
 %package gtk2
-Summary:	Smart Common Input Method Gtk IM module
+# or -n gtk+2-im-scim?
+Summary:	Smart Common Input Method GTK+ IM module
+Summary(pl.UTF-8):	Moduł IM GTK+ oparty na SCIM
 Group:		X11/Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	gtk+2
-Requires(post):	gtk+2
-Requires(postun):	gtk+2
+Requires(post,postun):	gtk+2
 
 %description gtk2
-This package provides a GTK input method module for SCIM.
+This package provides a GTK+ input method module for SCIM.
+
+%description gtk2 -l pl.UTF-8
+Ten pakiet zawiera moduł methody wejściowej GTK+ oparty na SCIM.
 
 %prep
 %setup -q
