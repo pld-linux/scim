@@ -170,11 +170,11 @@ rm -rf $RPM_BUILD_ROOT
 %files libs
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libscim-1.0.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libscim-1.0.so.[0-9]
+%attr(755,root,root) %ghost %{_libdir}/libscim-1.0.so.8
 %attr(755,root,root) %{_libdir}/libscim-gtkutils-1.0.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libscim-gtkutils-1.0.so.[0-9]
+%attr(755,root,root) %ghost %{_libdir}/libscim-gtkutils-1.0.so.8
 %attr(755,root,root) %{_libdir}/libscim-x11utils-1.0.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libscim-x11utils-1.0.so.[0-9]
+%attr(755,root,root) %ghost %{_libdir}/libscim-x11utils-1.0.so.8
 %dir %{_libdir}/scim-1.0
 %dir %{_libdir}/scim-1.0/1.4.0
 %dir %{_libdir}/scim-1.0/*/Config
