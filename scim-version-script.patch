@@ -1,0 +1,22 @@
+--- scim-1.4.13/extras/gtk_immodule/gtk2/Makefile.am.orig	2012-03-30 16:01:24.000000000 +0200
++++ scim-1.4.13/extras/gtk_immodule/gtk2/Makefile.am	2012-06-14 15:15:58.896182091 +0200
+@@ -27,7 +27,7 @@
+ endif
+ 
+ if SCIM_LD_VERSION_SCRIPT
+-LD_VERSION_SCRIPT_OPTION="-Wl,--version-script=$(srcdir)/im-scim.version-script"
++LD_VERSION_SCRIPT_OPTION="-Wl,--version-script=$(srcdir)/../im-scim.version-script"
+ endif
+ 
+ noinst_HEADERS = ../gtkimcontextscim.h
+--- scim-1.4.13/extras/gtk_immodule/gtk3/Makefile.am.orig	2012-03-30 18:58:49.000000000 +0200
++++ scim-1.4.13/extras/gtk_immodule/gtk3/Makefile.am	2012-06-14 15:15:48.266182536 +0200
+@@ -27,7 +27,7 @@
+ endif
+ 
+ if SCIM_LD_VERSION_SCRIPT
+-LD_VERSION_SCRIPT_OPTION="-Wl,--version-script=$(srcdir)/im-scim.version-script"
++LD_VERSION_SCRIPT_OPTION="-Wl,--version-script=$(srcdir)/../im-scim.version-script"
+ endif
+ 
+ noinst_HEADERS = ../gtkimcontextscim.h
