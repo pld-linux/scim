@@ -1,26 +1,28 @@
+# TODO: clutter (requires .pc: clutter-1.0 clutter-imcontext-0.1)
 #
 # Conditional build:
-%bcond_with	gtk2	# build GTK+ 2.x based gtkutils and setup
+%bcond_with	gtk2ui		# build GTK+ 2.x based gtkutils and setup
+%bcond_without	gtk2		# GTK+ 2.x IMModule
+%bcond_without	qt3		# Qt 3.x IMModule
+%bcond_without	qt4		# Qt 4.x IMModule
 #
 Summary:	Smart Common Input Method
 Summary(pl.UTF-8):	Smart Common Input Method - ogólna metoda wprowadzania
 Name:		scim
-Version:	1.4.13
+Version:	1.4.14
 Release:	1
 License:	LGPL v2+
 Group:		X11/Applications
 Source0:	http://downloads.sourceforge.net/scim/%{name}-%{version}.tar.gz
-# Source0-md5:	7d13016022d633b2faedc11338097cf2
+# Source0-md5:	495fbd080d9d6189e7eb67fd61097324
 Source1:	%{name}.xinputd
-Patch0:		%{name}-gtk2-immodule-dir.patch
-Patch1:		%{name}-config.patch
-Patch2:		%{name}-version-script.patch
+Patch0:		%{name}-config.patch
 URL:		http://www.scim-im.org/
 BuildRequires:	autoconf >= 2.59-9
 BuildRequires:	automake
 BuildRequires:	gettext-devel >= 0.14.1
 BuildRequires:	gdk-pixbuf2-devel >= 2.4.0
-BuildRequires:	gtk+2-devel >= 2:2.4.0
+%{?with_gtk2:BuildRequires:	gtk+2-devel >= 2:2.4.0}
 BuildRequires:	gtk+3-devel >= 3.0.0
 BuildRequires:	intltool >= 0.33
 BuildRequires:	libltdl-devel
@@ -28,7 +30,13 @@ BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:2.0
 BuildRequires:	pango-devel >= 1.1.0
 BuildRequires:	pkgconfig
+%{?with_qt3:BuildRequires:	qt-devel >= 3}
 BuildRequires:	xorg-lib-libX11-devel
+%if %{with qt4}
+BuildRequires:	QtCore-devel >= 4.0
+BuildRequires:	QtGui-devel >= 4.0
+BuildRequires:	qt4-build >= 4.0
+%endif
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	im-chooser
 Requires:	imsettings
@@ -121,11 +129,37 @@ This package provides a GTK+ 3.x input method module for SCIM.
 %description gtk3 -l pl.UTF-8
 Ten pakiet zawiera moduł methody wejściowej GTK+ 3.x oparty na SCIM.
 
+%package qt3
+# or -n qt-plugin-im-scim?
+Summary:	Smart Common Input Method Qt 3.x IM module
+Summary(pl.UTF-8):	Moduł IM Qt 3.x oparty na SCIM
+Group:		X11/Libraries
+Requires:	%{name} = %{version}-%{release}
+Requires:	qt >= 3
+
+%description qt3
+This package provides a Qt 3.x input method module for SCIM.
+
+%description qt3 -l pl.UTF-8
+Ten pakiet zawiera moduł methody wejściowej Qt 3.x oparty na SCIM.
+
+%package qt4
+# or -n qt4-plugin-im-scim?
+Summary:	Smart Common Input Method Qt 4.x IM module
+Summary(pl.UTF-8):	Moduł IM Qt 4.x oparty na SCIM
+Group:		X11/Libraries
+Requires:	%{name} = %{version}-%{release}
+Requires:	qt >= 3
+
+%description qt4
+This package provides a Qt 4.x input method module for SCIM.
+
+%description qt4 -l pl.UTF-8
+Ten pakiet zawiera moduł methody wejściowej Qt 4.x oparty na SCIM.
+
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
 
 %build
 %{__libtoolize}
@@ -134,8 +168,12 @@ Ten pakiet zawiera moduł methody wejściowej GTK+ 3.x oparty na SCIM.
 %{__autoconf}
 %{__automake}
 %configure \
+	%{!?with_gtk2:--disable-gtk2-immodule} \
 	--enable-ld-version-script \
-	%{?with_gtk2:--with-gtk-version=2}
+	%{!?with_qt3:--disable-qt3-immodule} \
+	%{!?with_qt4:--disable-qt4-immodule} \
+	%{?with_gtk2ui:--with-gtk-version=2} \
+	%{?with_qt3:--with-qt3-im-module-dir=%{_libdir}/qt/plugins-mt/inputmethods}
 
 %{__make}
 
@@ -150,8 +188,10 @@ install -d $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinput.d
 
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/*.la
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/scim-1.0/*/*/*.{la,a}
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/gtk-2.0/*/immodules/im-scim.{la,a}
+%{?with_gtk2:%{__rm} $RPM_BUILD_ROOT%{_libdir}/gtk-2.0/*/immodules/im-scim.{la,a}}
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/gtk-3.0/*/immodules/im-scim.{la,a}
+%{?with_qt3:%{__rm} $RPM_BUILD_ROOT%{_libdir}/qt/plugins-mt/inputmethods/im-scim.{la,a}}
+%{?with_qt4:%{__rm} $RPM_BUILD_ROOT%{_libdir}/qt4/plugins/inputmethods/im-scim.{la,a}}
 
 # obsolete GNOME2 file
 %{__rm} $RPM_BUILD_ROOT%{_datadir}/control-center-2.0/capplets/scim-setup.desktop
@@ -185,6 +225,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/X11/xinit/xinput.d/scim.conf
 %attr(755,root,root) %{_bindir}/scim
 %attr(755,root,root) %{_bindir}/scim-config-agent
+%attr(755,root,root) %{_bindir}/scim-im-agent
 %attr(755,root,root) %{_bindir}/scim-setup
 %dir %{_libdir}/scim-1.0/%{abiver}/Filter
 %dir %{_libdir}/scim-1.0/%{abiver}/FrontEnd
@@ -236,10 +277,24 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libscim-gtkutils-1.0.a
 %{_libdir}/libscim-x11utils-1.0.a
 
+%if %{with gtk2}
 %files gtk2
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gtk-2.0/2.*/immodules/im-scim.so
+%endif
 
 %files gtk3
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gtk-3.0/3.*/immodules/im-scim.so
+
+%if %{with qt3}
+%files qt3
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/qt/plugins-mt/inputmethods/im-scim.so
+%endif
+
+%if %{with qt4}
+%files qt4
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/qt4/plugins/inputmethods/im-scim.so
+%endif
