@@ -2,6 +2,7 @@
 #
 # Conditional build:
 %bcond_with	gtk2ui		# build GTK+ 2.x based gtkutils and setup
+%bcond_without	clutter		# Clutter IMModule
 %bcond_without	gtk2		# GTK+ 2.x IMModule
 %bcond_without	qt3		# Qt 3.x IMModule
 %bcond_without	qt4		# Qt 4.x IMModule
@@ -20,6 +21,8 @@ Patch0:		%{name}-config.patch
 URL:		http://www.scim-im.org/
 BuildRequires:	autoconf >= 2.59-9
 BuildRequires:	automake
+%{?with_clutter:BuildRequires:	clutter-devel >= 1.0.0}
+%{?with_clutter:BuildRequires:	clutter-imcontext-devel >= 0.1}
 BuildRequires:	gettext-devel >= 0.14.1
 BuildRequires:	gdk-pixbuf2-devel >= 2.4.0
 %{?with_gtk2:BuildRequires:	gtk+2-devel >= 2:2.4.0}
@@ -99,6 +102,19 @@ Static SCIM libraries.
 %description static -l pl.UTF-8
 Statyczne biblioteki SCIM.
 
+%package clutter
+# or -n clutter-imcontext-scim?
+Summary:	Smart Common Input Method Clutter IM module
+Summary(pl.UTF-8):	Moduł IM Clutter oparty na SCIM
+Group:		X11/Libraries
+Requires:	%{name} = %{version}-%{release}
+
+%description clutter
+This package provides a Clutter input method module for SCIM.
+
+%description clutter -l pl.UTF-8
+Ten pakiet zawiera moduł methody wejściowej Clutter oparty na SCIM.
+
 %package gtk2
 # or -n gtk+2-im-scim?
 Summary:	Smart Common Input Method GTK+ 2.x IM module
@@ -149,7 +165,7 @@ Summary:	Smart Common Input Method Qt 4.x IM module
 Summary(pl.UTF-8):	Moduł IM Qt 4.x oparty na SCIM
 Group:		X11/Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	qt >= 3
+Requires:	QtGui >= 4
 
 %description qt4
 This package provides a Qt 4.x input method module for SCIM.
@@ -168,6 +184,7 @@ Ten pakiet zawiera moduł methody wejściowej Qt 4.x oparty na SCIM.
 %{__autoconf}
 %{__automake}
 %configure \
+	%{!?with_clutter:--disable-clutter-immodule} \
 	%{!?with_gtk2:--disable-gtk2-immodule} \
 	--enable-ld-version-script \
 	%{!?with_qt3:--disable-qt3-immodule} \
@@ -188,6 +205,7 @@ install -d $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinput.d
 
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/*.la
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/scim-1.0/*/*/*.{la,a}
+%{?with_clutter:%{__rm} $RPM_BUILD_ROOT%{_libdir}/clutter-imcontext/immodules/im-scim.{la,a}}
 %{?with_gtk2:%{__rm} $RPM_BUILD_ROOT%{_libdir}/gtk-2.0/*/immodules/im-scim.{la,a}}
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/gtk-3.0/*/immodules/im-scim.{la,a}
 %{?with_qt3:%{__rm} $RPM_BUILD_ROOT%{_libdir}/qt/plugins-mt/inputmethods/im-scim.{la,a}}
@@ -276,6 +294,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libscim-1.0.a
 %{_libdir}/libscim-gtkutils-1.0.a
 %{_libdir}/libscim-x11utils-1.0.a
+
+%if %{with clutter}
+%files clutter
+%defattr(644,root,root,755)
+# TODO: move these dirs to clutter-imcontext when other modules appear
+%dir %{_libdir}/clutter-imcontext
+%dir %{_libdir}/clutter-imcontext/immodules
+%attr(755,root,root) %{_libdir}/clutter-imcontext/immodules/im-scim.so
+%endif
 
 %if %{with gtk2}
 %files gtk2
