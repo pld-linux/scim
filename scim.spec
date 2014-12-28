@@ -23,7 +23,7 @@ BuildRequires:	autoconf >= 2.59-9
 BuildRequires:	automake
 %{?with_clutter:BuildRequires:	clutter-devel >= 1.0.0}
 %{?with_clutter:BuildRequires:	clutter-imcontext-devel >= 0.1}
-BuildRequires:	gettext-devel >= 0.14.1
+BuildRequires:	gettext-tools >= 0.14.1
 BuildRequires:	gdk-pixbuf2-devel >= 2.4.0
 %{?with_gtk2:BuildRequires:	gtk+2-devel >= 2:2.4.0}
 BuildRequires:	gtk+3-devel >= 3.0.0
