@@ -178,6 +178,7 @@ Ten pakiet zawiera moduł methody wejściowej Qt 4.x oparty na SCIM.
 %patch0 -p1
 
 %build
+%{__intltoolize}
 %{__libtoolize}
 %{__aclocal} -I m4
 %{__autoheader}
