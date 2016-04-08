@@ -10,12 +10,12 @@
 Summary:	Smart Common Input Method
 Summary(pl.UTF-8):	Smart Common Input Method - ogólna metoda wprowadzania
 Name:		scim
-Version:	1.4.14
-Release:	3
+Version:	1.4.15
+Release:	1
 License:	LGPL v2+
 Group:		X11/Applications
 Source0:	http://downloads.sourceforge.net/scim/%{name}-%{version}.tar.gz
-# Source0-md5:	495fbd080d9d6189e7eb67fd61097324
+# Source0-md5:	b152326ec34a74e435685cfdc24541e5
 Source1:	%{name}.xinputd
 Patch0:		%{name}-config.patch
 URL:		http://www.scim-im.org/
@@ -178,14 +178,17 @@ Ten pakiet zawiera moduł methody wejściowej Qt 4.x oparty na SCIM.
 %patch0 -p1
 
 %build
+%{__gettextize}
+# remove po/Makefile.in from AC_CONFIG_FILES, intltool will add it once more
+%{__sed} -i -e '/AC_CONFIG_FILES/s, po/Makefile.in$,,' configure.ac
 %{__intltoolize}
 %{__libtoolize}
 %{__aclocal} -I m4
-%{__autoheader}
 %{__autoconf}
+%{__autoheader}
 %{__automake}
 %configure \
-	%{!?with_clutter:--disable-clutter-immodule} \
+	%{?with_clutter:--enable-clutter-immodule} \
 	%{!?with_gtk2:--disable-gtk2-immodule} \
 	--enable-ld-version-script \
 	%{!?with_qt3:--disable-qt3-immodule} \
