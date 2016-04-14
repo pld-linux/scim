@@ -1,4 +1,3 @@
-# TODO: clutter (requires .pc: clutter-1.0 clutter-imcontext-0.1)
 #
 # Conditional build:
 %bcond_with	gtk2ui		# build GTK+ 2.x based gtkutils and setup
@@ -10,12 +9,12 @@
 Summary:	Smart Common Input Method
 Summary(pl.UTF-8):	Smart Common Input Method - ogólna metoda wprowadzania
 Name:		scim
-Version:	1.4.15
+Version:	1.4.16
 Release:	1
 License:	LGPL v2+
 Group:		X11/Applications
 Source0:	http://downloads.sourceforge.net/scim/%{name}-%{version}.tar.gz
-# Source0-md5:	b152326ec34a74e435685cfdc24541e5
+# Source0-md5:	7a2475939c8b8a15a6953b91f91871a1
 Source1:	%{name}.xinputd
 Patch0:		%{name}-config.patch
 URL:		http://www.scim-im.org/
