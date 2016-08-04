@@ -9,12 +9,12 @@
 Summary:	Smart Common Input Method
 Summary(pl.UTF-8):	Smart Common Input Method - ogólna metoda wprowadzania
 Name:		scim
-Version:	1.4.16
+Version:	1.4.17
 Release:	1
 License:	LGPL v2+
 Group:		X11/Applications
 Source0:	http://downloads.sourceforge.net/scim/%{name}-%{version}.tar.gz
-# Source0-md5:	7a2475939c8b8a15a6953b91f91871a1
+# Source0-md5:	b43e0199108f2192aca4414abe0b378c
 Source1:	%{name}.xinputd
 Patch0:		%{name}-config.patch
 URL:		http://www.scim-im.org/
@@ -27,7 +27,7 @@ BuildRequires:	gdk-pixbuf2-devel >= 2.4.0
 %{?with_gtk2:BuildRequires:	gtk+2-devel >= 2:2.4.0}
 BuildRequires:	gtk+3-devel >= 3.0.0
 BuildRequires:	intltool >= 0.33
-BuildRequires:	libltdl-devel
+BuildRequires:	libltdl-devel >= 2:2.0
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:2.0
 BuildRequires:	pango-devel >= 1.1.0
