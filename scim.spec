@@ -9,30 +9,35 @@
 Summary:	Smart Common Input Method
 Summary(pl.UTF-8):	Smart Common Input Method - ogólna metoda wprowadzania
 Name:		scim
-Version:	1.4.17
+Version:	1.4.18
 Release:	1
 License:	LGPL v2+
 Group:		X11/Applications
-Source0:	http://downloads.sourceforge.net/scim/%{name}-%{version}.tar.gz
-# Source0-md5:	b43e0199108f2192aca4414abe0b378c
+#Source0Download: https://github.com/scim-im/scim/releases
+Source0:	https://github.com/scim-im/scim/archive/%{version}/%{name}-%{version}.tar.gz
+# Source0-md5:	2fdcee7e4aaf667c27e5041b097a0026
 Source1:	%{name}.xinputd
 Patch0:		%{name}-config.patch
-URL:		http://www.scim-im.org/
+URL:		https://github.com/scim-im/scim
 BuildRequires:	autoconf >= 2.59-9
 BuildRequires:	automake
 %{?with_clutter:BuildRequires:	clutter-devel >= 1.0.0}
 %{?with_clutter:BuildRequires:	clutter-imcontext-devel >= 0.1}
+BuildRequires:	docbook-style-xsl-nons
 BuildRequires:	gettext-tools >= 0.14.1
 BuildRequires:	gdk-pixbuf2-devel >= 2.4.0
+BuildRequires:	graphviz
 %{?with_gtk2:BuildRequires:	gtk+2-devel >= 2:2.4.0}
 BuildRequires:	gtk+3-devel >= 3.0.0
 BuildRequires:	intltool >= 0.33
 BuildRequires:	libltdl-devel >= 2:2.0
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:2.0
+BuildRequires:	libxslt-progs
 BuildRequires:	pango-devel >= 1.1.0
+BuildRequires:	perl-base
 BuildRequires:	pkgconfig
-%{?with_qt3:BuildRequires:	qt-devel >= 3}
+%{?with_qt3:BuildRequires:	qt-devel >= 3.3}
 BuildRequires:	xorg-lib-libX11-devel
 %if %{with qt4}
 BuildRequires:	QtCore-devel >= 4.0
@@ -150,7 +155,7 @@ Summary:	Smart Common Input Method Qt 3.x IM module
 Summary(pl.UTF-8):	Moduł IM Qt 3.x oparty na SCIM
 Group:		X11/Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	qt >= 3
+Requires:	qt >= 3.3
 
 %description qt3
 This package provides a Qt 3.x input method module for SCIM.
@@ -239,7 +244,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
-%doc AUTHORS ChangeLog README THANKS TODO
+%doc AUTHORS ChangeLog NEWS README THANKS TODO
 %dir %{_sysconfdir}/scim
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/scim/config
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/scim/global
