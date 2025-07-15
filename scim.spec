@@ -179,7 +179,7 @@ Ten pakiet zawiera moduł methody wejściowej Qt 4.x oparty na SCIM.
 
 %prep
 %setup -q
-%patch0 -p1
+%patch -P0 -p1
 
 %build
 %{__gettextize}
