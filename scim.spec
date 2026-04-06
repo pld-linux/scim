@@ -10,7 +10,7 @@ Summary:	Smart Common Input Method
 Summary(pl.UTF-8):	Smart Common Input Method - ogólna metoda wprowadzania
 Name:		scim
 Version:	1.4.18
-Release:	1
+Release:	2
 License:	LGPL v2+
 Group:		X11/Applications
 #Source0Download: https://github.com/scim-im/scim/releases
@@ -18,6 +18,7 @@ Source0:	https://github.com/scim-im/scim/archive/%{version}/%{name}-%{version}.t
 # Source0-md5:	2fdcee7e4aaf667c27e5041b097a0026
 Source1:	%{name}.xinputd
 Patch0:		%{name}-config.patch
+Patch1:		%{name}-c99.patch
 URL:		https://github.com/scim-im/scim
 BuildRequires:	autoconf >= 2.59-9
 BuildRequires:	automake
@@ -180,6 +181,7 @@ Ten pakiet zawiera moduł methody wejściowej Qt 4.x oparty na SCIM.
 %prep
 %setup -q
 %patch -P0 -p1
+%patch -P1 -p1
 
 %build
 %{__gettextize}
